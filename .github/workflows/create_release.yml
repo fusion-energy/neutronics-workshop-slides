@@ -1,0 +1,51 @@
+name: add files to release
+
+on:
+  # allows us to run workflows manually
+  workflow_dispatch:
+
+  release:
+    types: # This configuration does not affect the page_build event above
+      - published
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  building-plugin:
+    runs-on: ubuntu-latest
+
+    name: 'create_files'
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
+          fetch-depth: 0 # otherwise, you will failed to push refs to dest repo
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        run: |
+          npm install
+          npm i -g playwright-chromium
+          npm i -g @slidev/cli
+
+      - name: create files
+        run: 
+          slidev export slides.md --output slides.pdf
+
+      - name: Upload artifact for CI
+        uses: actions/upload-artifact@v2
+        with:
+          name: slides.pdf
+          path: slides.pdf
+          if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn` 
+
+      - name: Upload files into the release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: slides.pdf
+          asset_name: slides.pdf
+          tag: ${{ github.ref }}
