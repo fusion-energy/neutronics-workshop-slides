@@ -944,6 +944,15 @@ $Moderating \; power = \xi \Sigma _s$
 </div>
 <div>
 
+---
+
+# Rigorous 2 Step (R2S) and Direct 1 Step (D1S) methods
+
+<div style='text-align: center;'>
+
+![height:550px](images/d1s-r2s-mermaid.png)
+
+</div>
 
 ---
 
