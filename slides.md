@@ -430,8 +430,7 @@ import openmc
 surf_sphere1 = openmc.Sphere(r=10.0)
 surf_sphere2 = openmc.Sphere(r=20.0)
 between_spheres = +surf_sphere1 & -surf_sphere2
-cell_between = openmc.Cell(region= between_spheres) 
-
+cell_sphere = openmc.Cell(region=between_spheres)
 cell_sphere.fill = steel
 ```
 
@@ -459,8 +458,9 @@ The outer most surface of the model should have a ```boundary_type``` set to ```
 import openmc 
 
 surf_sphere = openmc.Sphere(r=10.0, boundary_type="vacuum")
-between_spheres = -surf_sphere
-cell_between = openmc.Cell(region= between_spheres) 
+region_inside_spheres = -surf_sphere
+cell_inside_spheres = openmc.Cell(region=region_inside_spheres)
+cell_sphere.fill = steel
 ```
 
 
