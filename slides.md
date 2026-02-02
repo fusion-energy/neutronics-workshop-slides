@@ -97,31 +97,28 @@ style: |
 
 # Getting started
 
-- 🐋 Install Docker
+- 🐋 Install Python
 
-- 🔽 Download the docker image
+- 🔽 Clone or download the repository
 
-- 🏃Run the docker image
+- 🏃pip install the dependencies
+
+- download the nuclear data
 
 - 🔗 Navigate to the URL in the terminal
 
-Detailed instructions are on [<u>GitHub</u>](https://github.com/fusion-energy/neutronics-workshop/tree/main#local-installation)
+ Detailed instructions are on <a href="https://fusion-energy.github.io/neutronics-workshop/docs/install_pip.html" style="text-decoration: underline;">GitHub</a>
 
 
 ---
 
-# Containers
+# Virtual environments
 
 <div class="columns"  style="font-size: 30px;">
 <div>
 
-Install single package (Docker) and avoid installing a few hundred packages.
-
-- Portable
-- Reproducible
-- Security
-- Isolation
-- Deployable
+- Easy to remove by deleting the folder
+- Avoid conflicts with your system Python
 
 </div>
 <div>
@@ -190,10 +187,13 @@ image source xkcd.com
 <div class="columns"  style="font-size: 30px;">
 <div>
 
-1. Run the docker image
-    ```docker run -p 8888:8888 ghcr.io/fusion-energy/neutronics-workshop```
 
-2. Double click on the ```half-day-workshop``` folder circled in red.
+
+1. If you are not already in the repository directory then ```cd neutronics-workshop```
+
+2. Run the ```jupyter lab``` command to launch Jupyter
+
+3. Click on the tasks folder within Jupyter
 
 </div>
 <div>
@@ -203,7 +203,7 @@ image source xkcd.com
 </div>
 <div>
 
----
+<!-- ---
 
 
 # Timetable
@@ -246,7 +246,7 @@ image source xkcd.com
   - task_16_optimal_design
 
 </div>
-</div>
+</div> -->
 
 ---
 
@@ -585,7 +585,7 @@ The energy distribution of MCF has less neutron scattering compared to ICF. Neut
 
 ![](images/dd_tt_dt.png)
 
-
+Plot created with fusion-neutron-utils [https://github.com/fusion-energy/fusion_neutron_utils](https://github.com/fusion-energy/fusion_neutron_utils)
 </div>
 <div>
 
@@ -868,6 +868,83 @@ $Moderating \; power = \xi \Sigma _s$
 # Now complete task 14 in the half day workshop
 
 ---
+
+# CAD overview
+
+Today simulation on CAD in OpenMC use:
+DAGMC for surface mesh geometry
+DAGMC for volume mesh (unstructured mesh)
+https://svalinn.github.io/DAGMC/
+
+LibMesh for surface mesh
+LibMesh for volume mesh (unstructured mesh)
+https://libmesh.github.io/
+
+In the future XDG https://github.com/pshriwise/xdg
+
+
+
+---
+# Converting CAD to DAGMC
+
+It is possible to automatically convert clean CAD into DAGMC geometry any use this in transport
+
+Convert a step file to a DAGMC file
+Convert a CAD object to a DAGMC file
+
+
+Try:
+Task 16 part 1
+Task 16 part 2
+
+
+
+
+---
+
+# Visualizing CAD to DAGMC
+
+In addition to slice plots, openmc plotter, openmc geometry plot there are two options that are specifically just for DAGMC geometry viewing.
+
+mbconvert (part of moab) with paraview
+
+stellarvisa
+https://github.com/Thea-Energy/stellarvista
+
+
+
+---
+
+# Simulating DAGMC surface geometry
+
+After creating the geometry
+
+Run particle transport with a meshed CAD geometry
+
+
+Try:
+Task 17 part 1
+
+
+
+---
+
+# Simulating DAGMC volume geometry
+
+
+Creation of a vtk file with tets was
+
+This allows us to simulate unstructured mesh geometry
+
+
+Try:
+Task 18 part 1
+
+
+
+---
+
+
 
 # Activation reactions
 
