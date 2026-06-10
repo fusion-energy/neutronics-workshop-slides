@@ -59,6 +59,7 @@ style: |
 
 
 # Fusion Neutronics Workshop
+## Half Day University Course
 
 ![Neutron](images/cover.png)
 <!-- ![bottom-right](logo) -->
