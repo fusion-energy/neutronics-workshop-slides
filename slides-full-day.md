@@ -63,3 +63,11 @@ style: |
 
 ![Neutron](images/cover.png)
 <!-- ![bottom-right](logo) -->
+
+---
+
+# 🚧 TODO - work in progress 🚧
+
+**This slide deck is not finished yet.**
+
+The full day course slides are still being written. Please check back later for the complete version.
