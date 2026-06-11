@@ -67,19 +67,6 @@ style: |
 ---
 
 
-# Why is neutronics useful
-
-
-![bg vertical height:15cm left:10%](images/why_neutronics.png)
-- **Radioactivity** - Neutrons activate material, making it radioactive leading to handling and waste storage requirements.​
-- **Hazardous** - Neutrons are Hazardous to health and shielded will be needed to protect the workforce.​
-- ***Produce fuel*** - Neutrons will be needed to convert lithium into tritium to fuel the reactor.​
-- ***Electricity*** - 80% of the energy release by each DT reaction is transferred to the neutron.​
-- ***Structural integrity*** - Neutrons cause damage to materials such as embrittlement, swelling, change conductivity …​
-- ***Diagnose*** - Neutrons are an important method of measuring a variety of plasma parameters (e.g. Q value).​
-
----
-
 # Topics Covered Half Day Course
 
 - Neutron and Photon interaction cross sections
@@ -93,6 +80,405 @@ style: |
 - Tallies (heat, tritium breeding ratio, damage, flux)
 
 - Neutron activation
+
+
+---
+
+# Timetable
+
+<div class="columns"  style="font-size: 20px;">
+<div>
+
+- 9.00 Introduction presentation
+- 9.10 Plotting cross sections
+    - task_01_isotope_xs_plot
+    - task_02_element_xs_plot
+    - task_03_material_xs_plot
+- 9.40 Making materials
+    - task_04_example_materials_from_isotopes
+    - task_05_example_materials_from_elements
+- 9.55 Geometry
+    - task_06_simple_csg_geometry
+- 10.15 Break ☕
+- 10.30 Plotting particles
+  - task_07_point_source_plots
+  - task_08_ring_source
+  - task_09_plasma_source_plots
+
+</div>
+<div>
+
+- 11.05 Tritium Breeding Ratio (TBR)
+  - task_10_example_tritium_production
+- 11.15 Damage (DPA)
+  - task_11_find_dpa
+- 11:30 Break ☕
+- 11:45 neutron photon spectra
+  - task_12_example_neutron_spectra_on_cell  
+  - task_13_example_photon_spectra
+- 12.15 mesh tallies
+  - task_14_example_2d_regular_mesh_tallies
+- 12.30 activation
+  - task_15_full_pulse_schedule
+- 12.45 Putting it all together
+  - task_16_optimal_design
+
+</div>
+</div>
+
+---
+
+# A day in the life of a fusion neutron
+
+We are going to track a single neutron through a fusion reactor and see what interactions happen along the way.
+
+This is exactly what a Monte Carlo code like OpenMC does, repeated for millions of neutrons, using random numbers to sample each interaction.
+
+---
+
+# Neutron transport
+
+<div class="columns">
+<div>
+
+We track a neutron through the reactor and at each step sample what happens next.
+
+Every interaction is governed by nuclear data and sampled from probability distributions.
+
+</div>
+<div>
+
+![](images/neutron_reaction_tree.png)
+
+</div>
+<div>
+
+---
+
+# A neutron is born
+
+<div class="columns">
+<div>
+
+- Deuterium (D) and Tritium (T) nuclides fuse, emitting an alpha particle and a neutron.
+- The neutron energy is dominated by the binding-energy release, with the spread due to the kinetic energy of the incident D and T nuclei.
+- Our neutron travels away from the fusion event with ~14.1 MeV.
+
+</div>
+<div>
+
+![](images/fusion_neutron_energy.png)
+
+</div>
+<div>
+
+---
+
+# Tokamak radial build
+
+<div class="columns">
+<div>
+
+We take a slice through the radial build of a tokamak and track our neutron through it.
+
+| Region | Thickness |
+| --- | --- |
+| Plasma | 1 m |
+| First wall | 0.1 m |
+| Breeder zone | 1 m |
+| Rear wall | 0.1 m |
+
+</div>
+<div>
+
+![width:400px](images/paramak.png)
+
+Built with [<u>Paramak</u>](https://paramak.readthedocs.io/en/main/).
+
+</div>
+<div>
+
+---
+
+# Into the plasma
+
+<div class="columns">
+<div>
+
+The neutron is travelling through a plasma of deuterium and tritium ions. Does it interact before escaping?
+
+- Macroscopic cross section $\Sigma_{total}$
+- Mean free path $= 1 / \Sigma_{total}$
+
+</div>
+<div>
+
+![](images/plasma_cross_section.png)
+
+</div>
+<div>
+
+---
+
+# Interaction in the plasma
+
+The distance to the next interaction is sampled with a random number. This sampling is the heart of the Monte Carlo method.
+
+<div style='text-align: center;'>
+
+$s = -\lambda \ln(\xi)$
+
+</div>
+
+where:
+- $s$ = distance to next collision (interaction length)
+- $\lambda$ = mean free path = $1 / \Sigma_{total}$
+- $\xi$ = random number uniformly distributed in (0, 1)
+
+---
+
+# First wall design decision
+
+The first wall material changes how the neutron behaves.
+
+<div class="columns">
+<div>
+
+### Water cooled
+
+</div>
+<div>
+
+### Helium cooled
+
+</div>
+<div>
+
+---
+
+# First wall interaction?
+
+<div class="columns">
+<div>
+
+Assuming a first wall that is 10 cm thick.
+
+Mean free path:
+- Helium cooled steel = 15 cm
+- Water cooled = 7 cm
+
+</div>
+<div>
+
+![](images/first_wall_cross_section.png)
+
+</div>
+<div>
+
+---
+
+# Which nuclide
+
+<div class="columns">
+<div>
+
+Each of the 11 nuclides in the steel has a different (n,total) interaction cross section.
+
+The total neutron cross section of each nuclide at 14 MeV decides which nuclide is hit.
+
+</div>
+<div>
+
+![](images/steel_nuclide_cross_sections.png)
+
+</div>
+<div>
+
+---
+
+# Which reaction
+
+<div class="columns">
+<div>
+
+The Fe56 nuclide has 82 reactions which the neutron can undergo.
+
+Finding the cross sections of each reaction at 14 MeV gives their relative probability.
+
+</div>
+<div>
+
+![](images/fe56_reactions.png)
+
+</div>
+<div>
+
+---
+
+# A new direction and energy
+
+<div class="columns">
+<div>
+
+The resulting scattering angle is transformed into the laboratory frame to obtain the new neutron direction.
+
+A 14 MeV neutron undergoing a 60° scatter reduces in energy depending on the mass of the target:
+- Fe56 = 13.7 MeV
+- H1 = 10 MeV
+
+![width:200px](images/neutron_scatter_cartoon.png)
+
+</div>
+<div>
+
+![](images/scatter_energy_formula.png)
+
+where $A$ is the target-to-neutron mass ratio.
+
+</div>
+<div>
+
+---
+
+# Into the breeder zone
+
+The breeder zone should:
+
+- Produce tritium
+- Produce heat
+- Provide shielding
+
+---
+
+# Producing tritium
+
+<div class="columns">
+<div>
+
+- To produce more tritium than the device consumes, each neutron must produce at least one tritium.
+- If every neutron interacted via Li6(n,t)He4 this would give a TBR of 1, which is insufficient due to losses (decay, leakage, immobilisation).
+- Neutron multiplication (n,2n), (n,Xn) is needed.
+
+</div>
+<div>
+
+![](images/be_pb_n2n.png)
+
+</div>
+<div>
+
+---
+
+# Breeder material design decision
+
+<div class="columns">
+<div>
+
+### Lithium Lead
+
+</div>
+<div>
+
+### FLiBe
+
+</div>
+<div>
+
+---
+
+# Which nuclide in lithium lead and FLiBe
+
+<div class="columns">
+<div>
+
+### FLiBe
+
+![width:420px](images/flibe_nuclides.png)
+
+</div>
+<div>
+
+### Lithium Lead
+
+![width:420px](images/lithium_lead_nuclides.png)
+
+</div>
+<div>
+
+---
+
+# Energy distribution
+
+<div class="columns">
+<div>
+
+The interactions that have neutrons as products also have nuclear data for energy and angular distributions.
+
+The nuclear data provides equation fits with coefficients, or tabular data, so the code can transport the products correctly.
+
+</div>
+<div>
+
+![](images/energy_distribution_data.png)
+
+</div>
+<div>
+
+---
+
+# Rear casing design decision
+
+<div class="columns">
+<div>
+
+### Graphite reflector
+
+</div>
+<div>
+
+### Tungsten shield
+
+</div>
+<div>
+
+---
+
+# Design decisions compared
+
+Results are impacted by the geometry as well as the material options. Changing the first wall thickness would produce a different winner.
+
+<div style="font-size: 20px;">
+
+| Coolant | Breeder | Casing | TBR | Heating | Leakage |
+| --- | --- | --- | :-: | :-: | :-: |
+| Water | Lithium Lead | Graphite | 0.72 | 0.60 | 0.0088 |
+| Water | Lithium Lead | Tungsten | 0.71 | 0.59 | 0.0061 |
+| Water | FLiBe | Graphite | 0.77 | 0.85 | 0.000034 |
+| Water | FLiBe | Tungsten | 0.77 | 0.85 | 0.000026 * |
+| Helium | Lithium Lead | Graphite | 1.58 * | 0.70 | 0.0117 |
+| Helium | Lithium Lead | Tungsten | 1.57 | 0.69 | 0.0083 |
+| Helium | FLiBe | Graphite | 1.27 | 0.96 * | 0.00004 |
+| Helium | FLiBe | Tungsten | 1.27 | 0.96 * | 0.000034 |
+
+<span style="font-size: 18px;">* best value in column</span>
+
+</div>
+
+These responses cannot be read from a table in general, they need to be simulated. The rest of the workshop builds up the tools to do exactly that.
+
+---
+
+# Why is neutronics useful
+
+
+![bg vertical height:15cm left:10%](images/why_neutronics.png)
+- **Radioactivity** - Neutrons activate material, making it radioactive leading to handling and waste storage requirements.​
+- **Hazardous** - Neutrons are Hazardous to health and shielded will be needed to protect the workforce.​
+- ***Produce fuel*** - Neutrons will be needed to convert lithium into tritium to fuel the reactor.​
+- ***Electricity*** - 80% of the energy release by each DT reaction is transferred to the neutron.​
+- ***Structural integrity*** - Neutrons cause damage to materials such as embrittlement, swelling, change conductivity …​
+- ***Diagnose*** - Neutrons are an important method of measuring a variety of plasma parameters (e.g. Q value).​
+
 
 ---
 
@@ -204,52 +590,8 @@ image source xkcd.com
 </div>
 <div>
 
-<!-- ---
-
-
-# Timetable
-
-<div class="columns"  style="font-size: 20px;">
-<div>
-
-- 9.00 Introduction presentation
-- 9.10 Plotting cross sections
-    - task_01_isotope_xs_plot
-    - task_02_element_xs_plot
-    - task_03_material_xs_plot
-- 9.40 Making materials
-    - task_04_example_materials_from_isotopes
-    - task_05_example_materials_from_elements
-- 9.55 Geometry
-    - task_06_simple_csg_geometry
-- 10.15 Break ☕
-- 10.30 Plotting particles
-  - task_07_point_source_plots
-  - task_08_ring_source
-  - task_09_plasma_source_plots
-
-</div>
-<div>
-
-- 11.05 Tritium Breeding Ratio (TBR)
-  - task_10_example_tritium_production
-- 11.15 Damage (DPA)
-  - task_11_find_dpa
-- 11:30 Break ☕
-- 11:45 neutron photon spectra
-  - task_12_example_neutron_spectra_on_cell  
-  - task_13_example_photon_spectra
-- 12.15 mesh tallies
-  - task_14_example_2d_regular_mesh_tallies
-- 12.30 activation
-  - task_15_full_pulse_schedule
-- 12.45 Putting it all together
-  - task_16_optimal_design
-
-</div>
-</div> -->
-
 ---
+
 
 # Microscopic Cross Sections
 
